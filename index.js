@@ -14,15 +14,15 @@ let countRandomSymbols = prompt('Введите количество симво�
 let rndStr = (randomString(countRandomSymbols));
 
 // 2. Замена букв
-let char = prompt('Введите символ для замены букв');
-let stringReplaceLetters = replaceLetters(char, rndStr);
+let symbol = prompt('Введите символ для замены букв');
+rndStr = replaceLetters(symbol, rndStr, counter);
 
 // 3. Замена чисел
-let number = prompt('Введите символ для замены цифр');
-let stringReplaceNumbers = replaceNumbers(number, stringReplaceLetters);
+symbol = prompt('Введите символ для замены цифр');
+rndStr = replaceNumbers(symbol, rndStr, counter);
  
 // 4. Рассчитать: количество измененных букв и чисел; неизмененных символов
-calcSymbols(stringReplaceNumbers, counter);
+calcSymbols(rndStr, counter);
 
 //-------------------------------------------------------
 
@@ -38,15 +38,16 @@ function randomString(N) {
 }
 
 // 2. Замена букв
-function replaceLetters (letter, Str) {
-    counter.firstSymbolName = letter;
+function replaceLetters (symbol, Str, count) {
+    count.firstSymbolName = symbol;
     let bufStr = '';
     for(let i = 0; i < Str.length; i++){
         if ((Number(Str[i]) >= 0 && Number(Str[i]) <= 9) || ('~$_-+'.includes(Str[i]))){
             bufStr += Str[i];            
         }
         else {
-            bufStr += String(letter);
+            bufStr += String(symbol);
+            if(Str[i] === symbol) count.firstSymbol--;
         }
     }
     console.log('2. Заменить буквы');
@@ -55,12 +56,13 @@ function replaceLetters (letter, Str) {
 }
 
 // 3. Замена чисел
-function replaceNumbers(numb, Str) {
-    counter.secondSymbolName = numb;
+function replaceNumbers(symbol, Str, count) {
+    count.secondSymbolName = symbol;
     let bufStr = '';
     for(let i = 0; i < Str.length; i++){
         if (Number(Str[i]) >= 0 && Number(Str[i]) <= 9){
-            bufStr += String(numb);         
+            bufStr += String(symbol);      
+            if(Str[i] === symbol) count.secondSymbol--;   
         }
         else {
             bufStr += Str[i];  
@@ -76,10 +78,13 @@ function calcSymbols(str, counter) {
     for (let i = 0; i < str.length; i++){
         if (str[i] === counter.firstSymbolName) counter.firstSymbol++;
         if (str[i] === counter.secondSymbolName) counter.secondSymbol++;
-        if (('~$_-+'.includes(str[i]))) counter.defaultSymbol++;
+        if (str[i] !== counter.secondSymbolName && str[i] !== counter.firstSymbolName) counter.defaultSymbol++;
     }
+    console.log('Счетчик замены букв:');
     console.log(counter.firstSymbol);
+    console.log('Счетчик замены цифр:');
     console.log(counter.secondSymbol);
+    console.log('Счетчик неизмененных символов:');
     console.log(counter.defaultSymbol);
 }
 
